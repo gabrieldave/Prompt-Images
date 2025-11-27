@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { PROMPT_OPTIONS, CATEGORIES, PromptOption, Category } from '@/lib/prompt-data';
 import { Card } from '@/components/ui/card';
@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Textarea } from '@/components/ui/textarea';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Badge } from '@/components/ui/badge';
+import { Progress } from '@/components/ui/progress';
 import { 
   Copy, 
   RefreshCw, 
@@ -18,7 +19,9 @@ import {
   Sparkles, 
   Maximize,
   Wand2,
-  Check
+  Check,
+  CheckCircle2,
+  Circle
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -47,6 +50,11 @@ export default function PromptBuilder() {
   });
   const [activeTab, setActiveTab] = useState<Category>('style');
   const { toast } = useToast();
+
+  // Calculate completion
+  const totalCategories = CATEGORIES.length;
+  const filledCategories = Object.values(selectedOptions).filter(Boolean).length;
+  const progress = (filledCategories / totalCategories) * 100;
 
   // Generate final prompt string
   const generatedPrompt = [
@@ -77,8 +85,8 @@ export default function PromptBuilder() {
     });
     setSelectedOptions(newOptions);
     toast({
-      title: "Randomized!",
-      description: "A unique combination has been generated.",
+      title: "Randomized Full Set",
+      description: "Selected one characteristic for every module.",
     });
   };
 
@@ -108,29 +116,47 @@ export default function PromptBuilder() {
       {/* Left Panel: Builder Controls */}
       <div className="lg:col-span-7 flex flex-col gap-4 h-full">
         <div className="glass-card p-6 rounded-xl flex-1 flex flex-col overflow-hidden">
-          <div className="mb-4">
-            <h2 className="text-xl font-display font-bold mb-2 flex items-center gap-2">
-              <Wand2 className="text-primary" />
-              Parameter Selector
-            </h2>
-            <p className="text-sm text-muted-foreground">
-              Select components from the Gemini Expert Manual to build your prompt.
-            </p>
+          <div className="mb-4 flex justify-between items-end">
+            <div>
+              <h2 className="text-xl font-display font-bold mb-2 flex items-center gap-2">
+                <Wand2 className="text-primary" />
+                Builder Modules
+              </h2>
+              <p className="text-sm text-muted-foreground">
+                Select one characteristic from each module for the best result.
+              </p>
+            </div>
+            <div className="text-right">
+              <span className="text-xs font-mono text-primary font-bold">{Math.round(progress)}% Complete</span>
+              <Progress value={progress} className="w-32 h-2 mt-1" />
+            </div>
           </div>
 
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as Category)} className="flex-1 flex flex-col">
             <ScrollArea className="w-full pb-2">
               <TabsList className="bg-secondary/50 border border-white/5 p-1 h-auto flex w-full justify-start">
-                {CATEGORIES.map(cat => (
-                  <TabsTrigger 
-                    key={cat.id} 
-                    value={cat.id}
-                    className="flex items-center gap-2 px-4 py-2 data-[state=active]:bg-primary data-[state=active]:text-white transition-all"
-                  >
-                    {getIcon(cat.icon)}
-                    {cat.label}
-                  </TabsTrigger>
-                ))}
+                {CATEGORIES.map(cat => {
+                  const isFilled = !!selectedOptions[cat.id];
+                  return (
+                    <TabsTrigger 
+                      key={cat.id} 
+                      value={cat.id}
+                      className={`
+                        flex items-center gap-2 px-4 py-2 transition-all relative
+                        data-[state=active]:bg-primary data-[state=active]:text-white
+                        ${isFilled && 'pr-8'} 
+                      `}
+                    >
+                      {getIcon(cat.icon)}
+                      {cat.label}
+                      {isFilled && (
+                        <div className="absolute right-2 top-1/2 -translate-y-1/2">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-green-400" />
+                        </div>
+                      )}
+                    </TabsTrigger>
+                  )
+                })}
               </TabsList>
             </ScrollArea>
 
@@ -162,7 +188,11 @@ export default function PromptBuilder() {
                                 <span className={`text-xs font-mono mb-1 opacity-60 ${isSelected ? 'text-primary' : 'text-muted-foreground'}`}>
                                   {option.group}
                                 </span>
-                                {isSelected && <Check className="w-3 h-3 text-primary" />}
+                                {isSelected ? (
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-primary" />
+                                ) : (
+                                  <Circle className="w-3.5 h-3.5 text-white/10 group-hover:text-primary/50" />
+                                )}
                               </div>
                               <span className={`font-medium text-sm ${isSelected ? 'text-primary-foreground' : 'text-foreground'}`}>
                                 {option.label}
