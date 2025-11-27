@@ -55,7 +55,7 @@ export default function PromptBuilder() {
   const progress = (filledCategories / totalCategories) * 100;
 
   // Generate final prompt string
-  const generatedPrompt = [
+  const promptParts = [
     basePrompt,
     selectedOptions.style,
     selectedOptions.camera,
@@ -64,6 +64,8 @@ export default function PromptBuilder() {
     selectedOptions.vibe,
     selectedOptions.format
   ].filter(Boolean).join(', ');
+
+  const generatedPrompt = promptParts ? `eres un creador de imagenes y vas hacer la siguiente imagen con la siguiente descripcion... ${promptParts}` : '';
 
   const handleOptionSelect = (category: Category, value: string) => {
     setSelectedOptions(prev => ({
@@ -237,6 +239,9 @@ export default function PromptBuilder() {
                    animate={{ opacity: 1 }}
                    key={generatedPrompt}
                  >
+                   <span className="text-muted-foreground italic block mb-2 border-b border-white/5 pb-2">
+                     eres un creador de imagenes y vas hacer la siguiente imagen con la siguiente descripcion...
+                   </span>
                    <span className="text-white font-bold">{basePrompt}</span>
                    {basePrompt && selectedOptions.style && ", "}
                    <span className="text-primary font-medium">{selectedOptions.style}</span>
