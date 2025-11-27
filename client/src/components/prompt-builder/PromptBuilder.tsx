@@ -49,7 +49,8 @@ import {
   Target,
   Upload,
   ScanSearch,
-  ClipboardPaste
+  ClipboardPaste,
+  Edit
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
@@ -126,6 +127,9 @@ const getIcon = (iconName: string, className = "w-5 h-5") => {
     'Sparkles': <Sparkles className={className} />,
     'Maximize': <Maximize className={className} />,
     'Film': <Film className={className} />,
+    'Zap': <Zap className={className} />,
+    'Target': <Target className={className} />,
+    'Edit': <Edit className={className} />,
     'ShoppingBag': <ShoppingBag className={className} />,
     'UtensilsCrossed': <UtensilsCrossed className={className} />,
     'Shirt': <Shirt className={className} />,
@@ -151,7 +155,10 @@ export default function PromptBuilder() {
     material: null,
     vibe: null,
     anime: null,
-    format: null
+    format: null,
+    physics: null,
+    adherence: null,
+    editing: null
   });
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [wizardInput, setWizardInput] = useState('');
@@ -160,9 +167,11 @@ export default function PromptBuilder() {
   const [selectedRecipe, setSelectedRecipe] = useState<Recipe | null>(null);
   const [recipeInputs, setRecipeInputs] = useState<Record<string, string>>({});
   
-  // Estado para texto en imagen
+  // Estado para texto en imagen (OCR Inverso - Imagen 3)
   const [imageText, setImageText] = useState('');
   const [textPosition, setTextPosition] = useState<string>('');
+  const [textStyle, setTextStyle] = useState<string>('');
+  const [textFont, setTextFont] = useState<string>('');
   
   // Estado para prefijo/rol del prompt
   const [promptPrefix, setPromptPrefix] = useState('Generate an image of');
@@ -433,12 +442,18 @@ export default function PromptBuilder() {
       selectedOptions.material,
       selectedOptions.vibe,
       selectedOptions.anime,
-      selectedOptions.format
+      selectedOptions.format,
+      selectedOptions.physics,
+      selectedOptions.adherence,
+      selectedOptions.editing
     ].filter(Boolean);
     
-    // Agregar texto si existe
+    // Agregar texto si existe (OCR Inverso - Imagen 3)
     if (imageText.trim()) {
-      const textPart = `with text "${imageText.trim()}"${textPosition ? ` ${textPosition}` : ''}`;
+      let textPart = `with text "${imageText.trim()}"`;
+      if (textPosition) textPart += ` ${textPosition}`;
+      if (textStyle) textPart += `, ${textStyle}`;
+      if (textFont) textPart += `, ${textFont}`;
       parts.push(textPart);
     }
     
@@ -467,7 +482,7 @@ export default function PromptBuilder() {
       const options = PROMPT_OPTIONS.filter(opt => opt.category === cat.id);
       if (options.length > 0) {
         const randomOpt = options[Math.floor(Math.random() * options.length)];
-        newOptions[cat.id] = randomOpt.value;
+        newOptions[cat.id as Category] = randomOpt.value;
       }
     });
     setSelectedOptions(newOptions);
@@ -486,10 +501,15 @@ export default function PromptBuilder() {
       material: null,
       vibe: null,
       anime: null,
-      format: null
+      format: null,
+      physics: null,
+      adherence: null,
+      editing: null
     });
     setImageText('');
     setTextPosition('');
+    setTextStyle('');
+    setTextFont('');
     setPromptPrefix('Generate an image of');
     setWizardInput('');
     setWizardOutput('');
@@ -573,7 +593,8 @@ export default function PromptBuilder() {
       setBasePrompt(data.prompt);
       setSelectedOptions({
         style: null, camera: null, lighting: null,
-        material: null, vibe: null, anime: null, format: null
+        material: null, vibe: null, anime: null, format: null,
+        physics: null, adherence: null, editing: null
       });
       toast({
         title: "¡Prompt mejorado!",
@@ -836,50 +857,102 @@ export default function PromptBuilder() {
                   />
                 </Card>
 
-                {/* Input de texto en imagen */}
+                {/* Input de texto en imagen (OCR Inverso - Imagen 3) */}
                 <Card className="p-4 glass border-white/10">
                   <div className="flex items-center gap-2 mb-2 text-orange-400">
                     <Type className="w-4 h-4" />
                     <label className="text-xs font-mono uppercase tracking-wider font-bold">
-                      Texto en Imagen (Opcional)
+                      Texto en Imagen (OCR Inverso)
                     </label>
+                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-400/20 text-orange-300">Imagen 3</span>
                   </div>
                   <input
                     type="text"
-                    placeholder='Ej: "SALE", "Hello World", "50% OFF"'
+                    placeholder='Ej: "SALE", "Hello World", "Codex Trader 2025"'
                     value={imageText}
                     onChange={(e) => setImageText(e.target.value)}
                     className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:border-orange-400/50 focus:outline-none placeholder:text-muted-foreground/40 mb-2"
                   />
                   {imageText && (
-                    <div className="flex flex-wrap gap-1.5 mt-2">
-                      <span className="text-[10px] text-muted-foreground mr-1">Posición:</span>
-                      {[
-                        { value: '', label: 'Auto' },
-                        { value: 'at the top', label: 'Arriba' },
-                        { value: 'at the bottom', label: 'Abajo' },
-                        { value: 'in the center', label: 'Centro' },
-                        { value: 'on the left', label: 'Izquierda' },
-                        { value: 'on the right', label: 'Derecha' },
-                      ].map(pos => (
-                        <button
-                          key={pos.value}
-                          onClick={() => setTextPosition(pos.value)}
-                          className={`
-                            px-2 py-0.5 rounded text-[10px] border transition-all
-                            ${textPosition === pos.value 
-                              ? 'bg-orange-400/20 border-orange-400 text-orange-300' 
-                              : 'bg-black/30 border-white/10 text-muted-foreground hover:border-orange-400/50'
-                            }
-                          `}
-                        >
-                          {pos.label}
-                        </button>
-                      ))}
-                    </div>
+                    <>
+                      <div className="flex flex-wrap gap-1.5 mt-2 mb-2">
+                        <span className="text-[10px] text-muted-foreground mr-1">Posición:</span>
+                        {[
+                          { value: '', label: 'Auto' },
+                          { value: 'at the top', label: 'Arriba' },
+                          { value: 'at the bottom', label: 'Abajo' },
+                          { value: 'in the center', label: 'Centro' },
+                          { value: 'on the left', label: 'Izquierda' },
+                          { value: 'on the right', label: 'Derecha' },
+                        ].map(pos => (
+                          <button
+                            key={pos.value}
+                            onClick={() => setTextPosition(pos.value)}
+                            className={`
+                              px-2 py-0.5 rounded text-[10px] border transition-all
+                              ${textPosition === pos.value 
+                                ? 'bg-orange-400/20 border-orange-400 text-orange-300' 
+                                : 'bg-black/30 border-white/10 text-muted-foreground hover:border-orange-400/50'
+                              }
+                            `}
+                          >
+                            {pos.label}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5 mb-2">
+                        <span className="text-[10px] text-muted-foreground mr-1">Estilo:</span>
+                        {[
+                          { value: '', label: 'Normal' },
+                          { value: 'neon text with glow', label: 'Neón' },
+                          { value: 'embossed text', label: 'Relieve' },
+                          { value: 'engraved in stone', label: 'Grabado' },
+                          { value: 'embroidered text', label: 'Bordado' },
+                          { value: 'pixel art text', label: 'Pixel Art' },
+                        ].map(style => (
+                          <button
+                            key={style.value}
+                            onClick={() => setTextStyle(style.value)}
+                            className={`
+                              px-2 py-0.5 rounded text-[10px] border transition-all
+                              ${textStyle === style.value 
+                                ? 'bg-orange-400/20 border-orange-400 text-orange-300' 
+                                : 'bg-black/30 border-white/10 text-muted-foreground hover:border-orange-400/50'
+                              }
+                            `}
+                          >
+                            {style.label}
+                          </button>
+                        ))}
+                      </div>
+                      <div className="flex flex-wrap gap-1.5">
+                        <span className="text-[10px] text-muted-foreground mr-1">Tipografía:</span>
+                        {[
+                          { value: '', label: 'Auto' },
+                          { value: 'serif font', label: 'Serif' },
+                          { value: 'sans-serif font', label: 'Sans-serif' },
+                          { value: 'graffiti style', label: 'Graffiti' },
+                          { value: 'handwritten style', label: 'Manuscrita' },
+                        ].map(font => (
+                          <button
+                            key={font.value}
+                            onClick={() => setTextFont(font.value)}
+                            className={`
+                              px-2 py-0.5 rounded text-[10px] border transition-all
+                              ${textFont === font.value 
+                                ? 'bg-orange-400/20 border-orange-400 text-orange-300' 
+                                : 'bg-black/30 border-white/10 text-muted-foreground hover:border-orange-400/50'
+                              }
+                            `}
+                          >
+                            {font.label}
+                          </button>
+                        ))}
+                      </div>
+                    </>
                   )}
                   <p className="text-[10px] text-muted-foreground/60 mt-2">
-                    💡 El texto se agregará como: with text "TU TEXTO"
+                    ✨ Imagen 3 puede generar texto legible y exacto dentro de la imagen
                   </p>
                 </Card>
 
