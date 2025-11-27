@@ -1,18 +1,21 @@
 {
-  "name": "rest-express",
-  "version": "1.0.0",
+  "name": "image-prompt-architect",
+  "version": "2.0.0",
   "type": "module",
   "license": "MIT",
   "scripts": {
     "dev:client": "vite dev --port 5000",
-    "dev": "NODE_ENV=development tsx server/index.ts",
+    "dev": "tsx server/index.ts",
+    "dev:win": "set NODE_ENV=development && tsx server/index.ts",
     "build": "tsx script/build.ts",
-    "start": "NODE_ENV=production node dist/index.cjs",
+    "start": "node dist/index.cjs",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "generate:previews": "node scripts/generate-previews.cjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
+    "dotenv": "^16.4.5",
     "@jridgewell/trace-mapping": "^0.3.25",
     "@neondatabase/serverless": "^0.10.4",
     "@radix-ui/react-accordion": "^1.2.12",
