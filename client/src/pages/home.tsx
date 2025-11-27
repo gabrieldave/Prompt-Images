@@ -15,7 +15,7 @@ export default function Home() {
         }}
       />
       
-      <div className="relative z-10 container mx-auto px-4 py-6 h-screen flex flex-col">
+      <div className="relative z-10 container mx-auto px-4 py-6 min-h-screen flex flex-col">
         {/* Header */}
         <header className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
           <div className="flex items-center gap-3">
@@ -43,7 +43,7 @@ export default function Home() {
         </header>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-hidden">
+        <main className="flex-1">
           <PromptBuilder />
         </main>
       </div>
