@@ -41,17 +41,26 @@ async function getApp(): Promise<Express> {
 
 // Exportar como función serverless para Vercel
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  const expressApp = await getApp();
-  
-  // Convertir Vercel request/response a Express format usando @vercel/node
-  return new Promise<void>((resolve, reject) => {
-    // @vercel/node ya convierte automáticamente, pero necesitamos manejar el callback
-    expressApp(req as any, res as any, (err?: any) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
+  try {
+    const expressApp = await getApp();
+    
+    // @vercel/node convierte automáticamente VercelRequest/VercelResponse a Express req/res
+    // Usamos el wrapper de @vercel/node para manejar la conversión
+    return new Promise<void>((resolve, reject) => {
+      expressApp(req as any, res as any, (err?: any) => {
+        if (err) {
+          console.error('Express error:', err);
+          reject(err);
+        } else {
+          resolve();
+        }
+      });
     });
-  });
+  } catch (error) {
+    console.error('Handler initialization error:', error);
+    res.status(500).json({ 
+      error: 'Error inicializando la aplicación',
+      message: error instanceof Error ? error.message : 'Error desconocido'
+    });
+  }
 }
