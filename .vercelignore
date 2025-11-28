@@ -1,0 +1,14 @@
+node_modules
+.git
+.env
+.env.local
+*.log
+.DS_Store
+attached_assets/generated_images
+scripts
+*.bat
+GENERAR_*.bat
+INICIAR_SERVIDOR.bat
+SUBIR_GIT.bat
+install.bat
+
