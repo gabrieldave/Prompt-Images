@@ -12,3 +12,5 @@ INICIAR_SERVIDOR.bat
 SUBIR_GIT.bat
 install.bat
 
+# Nota: Las imágenes en client/public se incluyen automáticamente en el build
+

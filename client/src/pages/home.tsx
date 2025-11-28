@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import PromptBuilder from "@/components/prompt-builder/PromptBuilder";
-import heroBg from "@assets/generated_images/abstract_dark_digital_art_background.png";
+import heroBg from "/abstract_dark_digital_art_background.png";
 import { Sparkles, Github, Coffee } from "lucide-react";
 
 export default function Home() {
