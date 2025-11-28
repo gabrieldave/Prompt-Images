@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import serverless from 'serverless-http';
 import express, { type Express } from "express";
 import { registerRoutes } from "../server/routes.js";
 import { createServer } from "http";
@@ -16,6 +17,7 @@ app.use(
 app.use(express.urlencoded({ extended: false, limit: '50mb' }));
 
 // Inicializar rutas una sola vez (singleton pattern para Vercel)
+let handler: ReturnType<typeof serverless> | null = null;
 let appInitialized = false;
 let initPromise: Promise<void> | null = null;
 
@@ -46,6 +48,11 @@ async function initializeApp(): Promise<void> {
         }
       });
       
+      // Crear handler serverless usando serverless-http
+      handler = serverless(app, {
+        binary: ['image/*', 'application/octet-stream'],
+      });
+      
       appInitialized = true;
       console.log('✅ App initialized successfully');
     } catch (error) {
@@ -60,102 +67,18 @@ async function initializeApp(): Promise<void> {
   return initPromise;
 }
 
-// Helper para convertir VercelRequest a Express Request
-function convertRequest(vercelReq: VercelRequest): any {
-  return {
-    method: vercelReq.method || 'GET',
-    url: vercelReq.url || '/',
-    originalUrl: vercelReq.url || '/',
-    path: vercelReq.url?.split('?')[0] || '/',
-    query: vercelReq.query || {},
-    body: vercelReq.body,
-    headers: vercelReq.headers,
-    get: (name: string) => vercelReq.headers[name.toLowerCase()],
-    params: {},
-  };
-}
-
-// Helper para convertir VercelResponse a Express Response
-function convertResponse(vercelRes: VercelResponse): any {
-  let statusCode = 200;
-  let headersSent = false;
-  
-  return {
-    statusCode,
-    headersSent,
-    status: function(code: number) {
-      statusCode = code;
-      return this;
-    },
-    json: function(body: any) {
-      if (!headersSent) {
-        headersSent = true;
-        vercelRes.status(statusCode).json(body);
-      }
-      return this;
-    },
-    send: function(body: any) {
-      if (!headersSent) {
-        headersSent = true;
-        vercelRes.status(statusCode).send(body);
-      }
-      return this;
-    },
-    end: function(body?: any) {
-      if (!headersSent) {
-        headersSent = true;
-        if (body) {
-          vercelRes.status(statusCode).send(body);
-        } else {
-          vercelRes.status(statusCode).end();
-        }
-      }
-      return this;
-    },
-    set: function(name: string, value: string) {
-      vercelRes.setHeader(name, value);
-      return this;
-    },
-    get: function(name: string) {
-      return vercelRes.getHeader(name);
-    },
-    get headersSent() {
-      return headersSent;
-    },
-  };
-}
-
 // Exportar como función serverless para Vercel
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export default async function vercelHandler(req: VercelRequest, res: VercelResponse) {
   try {
     // Inicializar la app si no está inicializada
     await initializeApp();
     
-    // Convertir VercelRequest/VercelResponse a formato Express
-    const expressReq = convertRequest(req);
-    const expressRes = convertResponse(res);
+    if (!handler) {
+      throw new Error('Handler not initialized');
+    }
     
-    // Ejecutar la app de Express
-    return new Promise<void>((resolve, reject) => {
-      app(expressReq, expressRes, (err?: any) => {
-        if (err) {
-          console.error('Express middleware error:', err);
-          if (!expressRes.headersSent) {
-            res.status(500).json({ 
-              error: 'Error procesando la solicitud',
-              message: err.message || 'Error desconocido'
-            });
-          }
-          reject(err);
-        } else {
-          // Si no hay error y no se envió respuesta, podría ser un 404
-          if (!expressRes.headersSent) {
-            res.status(404).json({ error: 'Ruta no encontrada' });
-          }
-          resolve();
-        }
-      });
-    });
+    // serverless-http maneja la conversión automáticamente
+    return handler(req, res);
   } catch (error) {
     console.error('Handler error:', error);
     const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
