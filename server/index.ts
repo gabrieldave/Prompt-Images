@@ -4,8 +4,11 @@ import { serveStatic } from "./static";
 import { createServer } from "http";
 import { config } from "dotenv";
 
-// Cargar variables de entorno desde .env
-config();
+// Cargar variables de entorno desde .env (solo en desarrollo)
+// En producción (Vercel), las variables vienen del dashboard
+if (process.env.NODE_ENV !== 'production') {
+  config();
+}
 
 const app = express();
 const httpServer = createServer(app);
@@ -65,6 +68,7 @@ app.use((req, res, next) => {
   next();
 });
 
+// Inicializar rutas
 (async () => {
   await registerRoutes(httpServer, app);
 
@@ -85,14 +89,17 @@ app.use((req, res, next) => {
     const { setupVite } = await import("./vite");
     await setupVite(httpServer, app);
   }
+})();
 
-  // ALWAYS serve the app on the port specified in the environment variable PORT
-  // Other ports are firewalled. Default to 5000 if not specified.
-  // this serves both the API and the client.
-  // It is the only port that is not firewalled.
+// Solo iniciar servidor HTTP si NO estamos en Vercel
+// En Vercel, la app se exporta como serverless function
+if (!process.env.VERCEL) {
   const port = parseInt(process.env.PORT || "5000", 10);
   httpServer.listen(port, "127.0.0.1", () => {
     log(`serving on port ${port}`);
     log(`Open: http://localhost:${port}`);
   });
-})();
+}
+
+// Exportar para Vercel serverless
+export default app;

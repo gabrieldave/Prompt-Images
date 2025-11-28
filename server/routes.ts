@@ -102,6 +102,18 @@ export async function registerRoutes(
   app: Express
 ): Promise<Server> {
   
+  // Endpoint de diagnóstico/health check
+  app.get("/api/health", (req, res) => {
+    const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
+    res.json({
+      status: "ok",
+      openai_configured: hasOpenAIKey,
+      node_env: process.env.NODE_ENV,
+      vercel: !!process.env.VERCEL,
+      timestamp: new Date().toISOString()
+    });
+  });
+  
   // Endpoint: Modo Mago - Convierte descripción simple en prompt profesional
   app.post("/api/ai/wizard", async (req, res) => {
     try {
@@ -113,7 +125,18 @@ export async function registerRoutes(
 
       const apiKey = process.env.OPENAI_API_KEY;
       if (!apiKey) {
-        return res.status(500).json({ error: "API key de OpenAI no configurada" });
+        console.error("❌ OPENAI_API_KEY no encontrada");
+        console.error("NODE_ENV:", process.env.NODE_ENV);
+        console.error("VERCEL:", process.env.VERCEL);
+        console.error("Variables que contienen 'OPENAI':", Object.keys(process.env).filter(k => k.toUpperCase().includes('OPENAI')));
+        return res.status(500).json({ 
+          error: "API key de OpenAI no configurada. Ve a Vercel → Settings → Environment Variables y añade OPENAI_API_KEY. Luego redespliega el proyecto.",
+          debug: {
+            hasKey: false,
+            nodeEnv: process.env.NODE_ENV,
+            isVercel: !!process.env.VERCEL
+          }
+        });
       }
 
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -160,7 +183,18 @@ export async function registerRoutes(
 
       const apiKey = process.env.OPENAI_API_KEY;
       if (!apiKey) {
-        return res.status(500).json({ error: "API key de OpenAI no configurada" });
+        console.error("❌ OPENAI_API_KEY no encontrada");
+        console.error("NODE_ENV:", process.env.NODE_ENV);
+        console.error("VERCEL:", process.env.VERCEL);
+        console.error("Variables que contienen 'OPENAI':", Object.keys(process.env).filter(k => k.toUpperCase().includes('OPENAI')));
+        return res.status(500).json({ 
+          error: "API key de OpenAI no configurada. Ve a Vercel → Settings → Environment Variables y añade OPENAI_API_KEY. Luego redespliega el proyecto.",
+          debug: {
+            hasKey: false,
+            nodeEnv: process.env.NODE_ENV,
+            isVercel: !!process.env.VERCEL
+          }
+        });
       }
 
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -207,7 +241,18 @@ export async function registerRoutes(
 
       const apiKey = process.env.OPENAI_API_KEY;
       if (!apiKey) {
-        return res.status(500).json({ error: "API key de OpenAI no configurada" });
+        console.error("❌ OPENAI_API_KEY no encontrada");
+        console.error("NODE_ENV:", process.env.NODE_ENV);
+        console.error("VERCEL:", process.env.VERCEL);
+        console.error("Variables que contienen 'OPENAI':", Object.keys(process.env).filter(k => k.toUpperCase().includes('OPENAI')));
+        return res.status(500).json({ 
+          error: "API key de OpenAI no configurada. Ve a Vercel → Settings → Environment Variables y añade OPENAI_API_KEY. Luego redespliega el proyecto.",
+          debug: {
+            hasKey: false,
+            nodeEnv: process.env.NODE_ENV,
+            isVercel: !!process.env.VERCEL
+          }
+        });
       }
 
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
@@ -447,6 +492,31 @@ export async function registerRoutes(
   });
 
   // Endpoint: Generar variaciones creativas
+  // Endpoint de diagnóstico para verificar variables de entorno en Vercel
+  app.get("/api/diagnose-env", (req, res) => {
+    const hasOpenAIKey = !!process.env.OPENAI_API_KEY;
+    const keyLength = process.env.OPENAI_API_KEY?.length || 0;
+    const keyPrefix = process.env.OPENAI_API_KEY?.substring(0, 7) || 'N/A';
+    
+    res.json({
+      openai_api_key: {
+        exists: hasOpenAIKey,
+        length: keyLength,
+        prefix: hasOpenAIKey ? `${keyPrefix}...` : 'N/A',
+        configured: hasOpenAIKey && keyLength > 20
+      },
+      environment: {
+        node_env: process.env.NODE_ENV || 'not set',
+        vercel: !!process.env.VERCEL,
+        vercel_env: process.env.VERCEL_ENV || 'not set',
+        port: process.env.PORT || 'not set'
+      },
+      all_env_keys: Object.keys(process.env)
+        .filter(k => k.toUpperCase().includes('OPENAI') || k.toUpperCase().includes('API'))
+        .sort()
+    });
+  });
+
   app.post("/api/ai/variations", async (req, res) => {
     try {
       const { prompt, count = 3 } = req.body;
@@ -457,7 +527,18 @@ export async function registerRoutes(
 
       const apiKey = process.env.OPENAI_API_KEY;
       if (!apiKey) {
-        return res.status(500).json({ error: "API key de OpenAI no configurada" });
+        console.error("❌ OPENAI_API_KEY no encontrada");
+        console.error("NODE_ENV:", process.env.NODE_ENV);
+        console.error("VERCEL:", process.env.VERCEL);
+        console.error("Variables que contienen 'OPENAI':", Object.keys(process.env).filter(k => k.toUpperCase().includes('OPENAI')));
+        return res.status(500).json({ 
+          error: "API key de OpenAI no configurada. Ve a Vercel → Settings → Environment Variables y añade OPENAI_API_KEY. Luego redespliega el proyecto.",
+          debug: {
+            hasKey: false,
+            nodeEnv: process.env.NODE_ENV,
+            isVercel: !!process.env.VERCEL
+          }
+        });
       }
 
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
