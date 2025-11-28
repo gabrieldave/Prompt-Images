@@ -168,7 +168,15 @@ export async function registerRoutes(
       res.json({ prompt: generatedPrompt });
     } catch (error) {
       console.error("Error in /api/ai/wizard:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
+      const errorMessage = error instanceof Error ? error.message : 'Error desconocido';
+      res.status(500).json({ 
+        error: `Error interno del servidor: ${errorMessage}`,
+        debug: {
+          hasOpenAIKey: !!process.env.OPENAI_API_KEY,
+          nodeEnv: process.env.NODE_ENV,
+          isVercel: !!process.env.VERCEL
+        }
+      });
     }
   });
 

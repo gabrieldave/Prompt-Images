@@ -545,7 +545,21 @@ export default function PromptBuilder() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al generar el prompt');
+        // Intentar leer el mensaje de error del servidor
+        let errorMessage = 'Error al generar el prompt';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+          // Si hay información de debug, mostrarla en consola
+          if (errorData.debug) {
+            console.error('Debug info:', errorData.debug);
+          }
+        } catch (e) {
+          // Si no se puede parsear el JSON, usar el texto de respuesta
+          const text = await response.text();
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -555,11 +569,13 @@ export default function PromptBuilder() {
         description: "La IA ha creado un prompt profesional para ti.",
       });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'No se pudo conectar con la IA. Verifica tu conexión.';
       toast({
         title: "Error",
-        description: "No se pudo conectar con la IA. Verifica tu conexión.",
+        description: errorMessage,
         variant: "destructive"
       });
+      console.error('Error en wizard:', error);
     } finally {
       setIsLoading(false);
     }
@@ -586,7 +602,19 @@ export default function PromptBuilder() {
       });
 
       if (!response.ok) {
-        throw new Error('Error al mejorar el prompt');
+        // Intentar leer el mensaje de error del servidor
+        let errorMessage = 'Error al mejorar el prompt';
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.error || errorMessage;
+          if (errorData.debug) {
+            console.error('Debug info:', errorData.debug);
+          }
+        } catch (e) {
+          const text = await response.text();
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
@@ -601,11 +629,13 @@ export default function PromptBuilder() {
         description: "La IA ha optimizado tu prompt con detalles profesionales.",
       });
     } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'No se pudo conectar con la IA.';
       toast({
         title: "Error",
-        description: "No se pudo conectar con la IA.",
+        description: errorMessage,
         variant: "destructive"
       });
+      console.error('Error en improve:', error);
     } finally {
       setIsLoading(false);
     }
