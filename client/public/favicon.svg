@@ -1,19 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="8" fill="url(#gradient)"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none">
   <defs>
     <linearGradient id="gradient" x1="0" y1="0" x2="32" y2="32" gradientUnits="userSpaceOnUse">
-      <stop offset="0%" stop-color="#7c3aed"/>
-      <stop offset="50%" stop-color="#a855f7"/>
-      <stop offset="100%" stop-color="#ec4899"/>
+      <stop offset="0%" stop-color="#8B5CF6" />
+      <stop offset="50%" stop-color="#EC4899" />
+      <stop offset="100%" stop-color="#F472B6" />
     </linearGradient>
   </defs>
-  <!-- Sparkles Icon - Main star centered -->
-  <g transform="translate(16, 16)">
-    <!-- Main large star -->
-    <path d="M0 -6L1.5 -2L5.5 -2L2.5 0.5L4 4.5L0 2L-4 4.5L-2.5 0.5L-5.5 -2L-1.5 -2L0 -6Z" fill="white" stroke="white" stroke-width="0.3" stroke-linejoin="round"/>
-    <!-- Small sparkle top right -->
-    <path d="M4 -4L4.3 -2.5L5.5 -2.5L4.5 -1.5L4.8 0L4 -0.5L3.2 0L3.5 -1.5L2.5 -2.5L3.7 -2.5L4 -4Z" fill="white" opacity="0.9"/>
-    <!-- Tiny dot bottom left -->
-    <circle cx="-4" cy="2" r="0.6" fill="white" opacity="0.8"/>
-  </g>
+  <!-- Sparkles icon from Lucide React -->
+  <path d="M9.937 15.5a2 2 0 1 0 .937 2.865l2.126-4.258a2 2 0 1 0-.937-2.865L9.937 15.5Z" fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M13.5 2.5a2 2 0 1 0 .937 2.865l2.126-4.258a2 2 0 1 0-.937-2.865L13.5 2.5Z" fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M19.062 8.5a2 2 0 1 0 .937 2.865l-2.126 4.258a2 2 0 1 0-.937 2.865l2.126-4.258Z" fill="url(#gradient)" stroke="url(#gradient)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M2 2h3v3H2zM19 19h3v3h-3zM2 19h3v3H2zM19 2h3v3h-3z" fill="url(#gradient)"/>
 </svg>
