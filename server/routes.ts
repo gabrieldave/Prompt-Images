@@ -1,6 +1,6 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
-import { storage } from "./storage";
+import { storage } from "./storage.js";
 
 // Sistema de prompts para el asistente de IA
 const SYSTEM_PROMPT_WIZARD = `Eres un experto en generación de imágenes con IA (Gemini, Midjourney, DALL-E, Stable Diffusion). 
