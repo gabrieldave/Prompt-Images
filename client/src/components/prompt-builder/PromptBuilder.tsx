@@ -350,11 +350,23 @@ export default function PromptBuilder() {
         body: JSON.stringify({ imageBase64: uploadedImage })
       });
 
-      const data = await response.json();
-      
       if (!response.ok) {
-        throw new Error(data.error || 'Error al analizar la imagen');
+        // Leer el texto primero (solo se puede leer una vez)
+        const text = await response.text();
+        let errorMessage = 'Error al analizar la imagen';
+        
+        // Intentar parsear como JSON
+        try {
+          const errorData = JSON.parse(text);
+          errorMessage = errorData.error || errorMessage;
+        } catch (e) {
+          // Si no es JSON válido, usar el texto directamente
+          errorMessage = text || errorMessage;
+        }
+        throw new Error(errorMessage);
       }
+
+      const data = await response.json();
 
       setStructuredAnalysis(data.analysis);
       // Resetear selecciones (subject desactivado por defecto)
@@ -545,18 +557,20 @@ export default function PromptBuilder() {
       });
 
       if (!response.ok) {
-        // Intentar leer el mensaje de error del servidor
+        // Leer el texto primero (solo se puede leer una vez)
+        const text = await response.text();
         let errorMessage = 'Error al generar el prompt';
+        
+        // Intentar parsear como JSON
         try {
-          const errorData = await response.json();
+          const errorData = JSON.parse(text);
           errorMessage = errorData.error || errorMessage;
           // Si hay información de debug, mostrarla en consola
           if (errorData.debug) {
             console.error('Debug info:', errorData.debug);
           }
         } catch (e) {
-          // Si no se puede parsear el JSON, usar el texto de respuesta
-          const text = await response.text();
+          // Si no es JSON válido, usar el texto directamente
           errorMessage = text || errorMessage;
         }
         throw new Error(errorMessage);
@@ -602,16 +616,19 @@ export default function PromptBuilder() {
       });
 
       if (!response.ok) {
-        // Intentar leer el mensaje de error del servidor
+        // Leer el texto primero (solo se puede leer una vez)
+        const text = await response.text();
         let errorMessage = 'Error al mejorar el prompt';
+        
+        // Intentar parsear como JSON
         try {
-          const errorData = await response.json();
+          const errorData = JSON.parse(text);
           errorMessage = errorData.error || errorMessage;
           if (errorData.debug) {
             console.error('Debug info:', errorData.debug);
           }
         } catch (e) {
-          const text = await response.text();
+          // Si no es JSON válido, usar el texto directamente
           errorMessage = text || errorMessage;
         }
         throw new Error(errorMessage);
