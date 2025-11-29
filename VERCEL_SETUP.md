@@ -92,3 +92,6 @@ Si `openai_configured` es `false`, la variable no está configurada correctament
 - [OpenAI API Keys](https://platform.openai.com/api-keys)
 - [Vercel Function Logs](https://vercel.com/docs/concepts/functions/serverless-functions#logs)
 
+
+
+

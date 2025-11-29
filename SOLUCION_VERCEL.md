@@ -83,3 +83,6 @@ El proyecto está configurado para:
 - Después de cambiar variables, **siempre redespliega**
 - El endpoint `/api/diagnose-env` te ayuda a diagnosticar problemas
 
+
+
+
