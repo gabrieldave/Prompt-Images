@@ -8,8 +8,6 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger, PopoverClose } from '@/components/ui/popover';
-import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Copy, 
@@ -89,9 +87,9 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
       exit={{ opacity: 0, scale: 0.95 }}
       className="relative w-full h-full"
     >
-      <div className={`relative rounded-lg overflow-hidden bg-black/50 border border-white/10 w-full ${isMobile ? 'flex flex-col max-h-full' : ''}`}>
+      <div className="relative rounded-lg overflow-hidden bg-black/50 border border-white/10 w-full">
         {/* Header */}
-        <div className="flex items-center justify-between p-2.5 sm:p-3 border-b border-white/10 bg-black/30 flex-shrink-0">
+        <div className="flex items-center justify-between p-2 sm:p-3 border-b border-white/10 bg-black/30 flex-shrink-0">
           <div className="flex-1 min-w-0 pr-2">
             <h4 className="font-bold text-white text-xs sm:text-sm truncate">{option.labelEs}</h4>
             <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1">{option.descriptionEs || option.value}</p>
@@ -100,7 +98,7 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
         </div>
         
         {/* Image */}
-        <div className={`relative bg-black/20 flex items-center justify-center flex-1 ${isMobile ? 'min-h-[250px] max-h-[calc(85vh-120px)] p-3' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
+        <div className={`relative bg-black/20 flex items-center justify-center ${isMobile ? 'min-h-[180px] max-h-[50vh] p-2' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -143,59 +141,38 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
   );
 }
 
-// Componente para mostrar preview (Dialog en móvil, Popover en desktop)
+// Componente para mostrar preview (Popover optimizado para móvil y desktop)
 function ImagePreviewButton({ option, isSelected }: { option: PromptOption; isSelected?: boolean }) {
   const isMobile = useIsMobile();
   const [open, setOpen] = useState(false);
 
-  const triggerButton = (
-    <button 
-      className={`
-        p-1.5 sm:p-2 rounded-lg rounded-l-none border text-sm transition-all flex-shrink-0
-        ${isSelected 
-          ? 'bg-primary/20 border-primary text-primary hover:bg-primary/30' 
-          : 'bg-black/30 border-white/10 text-muted-foreground hover:text-white hover:bg-black/50'
-        }
-      `}
-      title="Ver ejemplo"
-      onClick={() => setOpen(true)}
-    >
-      <Eye className="w-3.5 h-3.5" />
-    </button>
-  );
-
-  if (isMobile) {
-    // En móvil: usar Sheet desde abajo (más natural en móvil)
-    return (
-      <Sheet open={open} onOpenChange={setOpen}>
-        <SheetTrigger asChild>
-          {triggerButton}
-        </SheetTrigger>
-        <SheetContent 
-          side="bottom"
-          className="h-[85vh] max-h-[85vh] p-0 bg-black/95 border-white/20 rounded-t-2xl [&>button]:hidden overflow-hidden flex flex-col"
-        >
-          <div className="flex-1 flex items-center justify-center overflow-auto min-h-0 p-3">
-            <div className="w-full max-w-full h-full flex flex-col">
-              <ImagePreview option={option} onClose={() => setOpen(false)} />
-            </div>
-          </div>
-        </SheetContent>
-      </Sheet>
-    );
-  }
-
-  // En desktop: usar Popover
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        {triggerButton}
+        <button 
+          className={`
+            p-1.5 sm:p-2 rounded-lg rounded-l-none border text-sm transition-all flex-shrink-0
+            ${isSelected 
+              ? 'bg-primary/20 border-primary text-primary hover:bg-primary/30' 
+              : 'bg-black/30 border-white/10 text-muted-foreground hover:text-white hover:bg-black/50'
+            }
+          `}
+          title="Ver ejemplo"
+        >
+          <Eye className="w-3.5 h-3.5" />
+        </button>
       </PopoverTrigger>
       <PopoverContent 
-        className="w-96 max-w-md p-0 bg-black/90 border-white/10 max-h-[85vh] overflow-y-auto"
-        side="bottom"
+        className={`
+          p-0 bg-black/95 border-white/20 overflow-hidden
+          ${isMobile 
+            ? 'w-[85vw] max-w-[85vw] max-h-[70vh] rounded-xl' 
+            : 'w-96 max-w-md max-h-[85vh] rounded-lg'
+          }
+        `}
+        side={isMobile ? "top" : "bottom"}
         align="center"
-        sideOffset={8}
+        sideOffset={isMobile ? 12 : 8}
         alignOffset={0}
       >
         <ImagePreview option={option} />
