@@ -84,7 +84,7 @@ function ImagePreview({ option }: { option: PromptOption }) {
         </div>
         
         {/* Image */}
-        <div className="relative aspect-video bg-black/20 min-h-[150px] sm:min-h-[200px] flex items-center justify-center">
+        <div className="relative bg-black/20 min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] flex items-center justify-center p-2">
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -99,7 +99,15 @@ function ImagePreview({ option }: { option: PromptOption }) {
             <img 
               src={option.previewUrl} 
               alt={option.labelEs}
-              className={`max-w-full max-h-full w-auto h-auto object-contain transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              style={{ 
+                maxWidth: '100%', 
+                maxHeight: '100%', 
+                width: 'auto', 
+                height: 'auto',
+                objectFit: 'contain',
+                display: 'block'
+              }}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
               loading="lazy"
@@ -830,7 +838,7 @@ export default function PromptBuilder() {
                                               </button>
                                             </PopoverTrigger>
                                             <PopoverContent 
-                                              className="w-[calc(100vw-2rem)] max-w-sm sm:w-80 p-0 bg-black/90 border-white/10 mx-auto left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0"
+                                              className="w-[calc(100vw-1rem)] max-w-md sm:w-96 p-0 bg-black/90 border-white/10 mx-auto left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 max-h-[85vh] overflow-y-auto"
                                               side="bottom"
                                               align="center"
                                               sideOffset={8}
