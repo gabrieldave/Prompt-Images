@@ -15,7 +15,7 @@
     "check": "tsc",
     "db:push": "drizzle-kit push",
     "generate:previews": "node scripts/generate-previews.cjs",
-    "generate:icons": "node scripts/generate-icons.mjs"
+    "generate:icons": "node scripts/generate-icons-simple.mjs"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
