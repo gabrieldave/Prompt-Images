@@ -88,18 +88,18 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
       exit={{ opacity: 0, scale: 0.95 }}
       className="relative w-full h-full"
     >
-      <div className={`relative rounded-lg overflow-hidden bg-black/50 border border-white/10 ${isMobile ? 'w-full h-full flex flex-col' : 'w-full'}`}>
+      <div className={`relative rounded-lg overflow-hidden bg-black/50 border border-white/10 w-full ${isMobile ? 'flex flex-col max-h-full' : ''}`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-3 border-b border-white/10 bg-black/30 flex-shrink-0">
+        <div className="flex items-center justify-between p-2.5 sm:p-3 border-b border-white/10 bg-black/30 flex-shrink-0">
           <div className="flex-1 min-w-0 pr-2">
-            <h4 className="font-bold text-white text-sm truncate">{option.labelEs}</h4>
-            <p className="text-xs text-muted-foreground line-clamp-2">{option.descriptionEs || option.value}</p>
+            <h4 className="font-bold text-white text-xs sm:text-sm truncate">{option.labelEs}</h4>
+            <p className="text-[10px] sm:text-xs text-muted-foreground line-clamp-1">{option.descriptionEs || option.value}</p>
           </div>
           {CloseButton}
         </div>
         
         {/* Image */}
-        <div className={`relative bg-black/20 flex items-center justify-center flex-1 ${isMobile ? 'min-h-0 max-h-full p-4' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
+        <div className={`relative bg-black/20 flex items-center justify-center ${isMobile ? 'min-h-[200px] max-h-[60vh] p-3' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -121,7 +121,8 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
                 width: 'auto', 
                 height: 'auto',
                 objectFit: 'contain',
-                display: 'block'
+                display: 'block',
+                margin: '0 auto'
               }}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
@@ -131,8 +132,8 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
         </div>
 
         {/* Footer */}
-        <div className="p-2 bg-black/30 border-t border-white/10 flex-shrink-0">
-          <p className="text-[10px] text-muted-foreground font-mono truncate">
+        <div className="p-1.5 sm:p-2 bg-black/30 border-t border-white/10 flex-shrink-0">
+          <p className="text-[9px] sm:text-[10px] text-muted-foreground font-mono truncate">
             Prompt: {option.value}
           </p>
         </div>
@@ -163,17 +164,24 @@ function ImagePreviewButton({ option, isSelected }: { option: PromptOption; isSe
   );
 
   if (isMobile) {
-    // En móvil: usar Dialog casi fullscreen y centrado
+    // En móvil: usar Dialog con tamaño razonable y centrado
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
           {triggerButton}
         </DialogTrigger>
         <DialogContent 
-          className="max-w-[95vw] max-h-[95vh] w-[95vw] h-[95vh] p-0 bg-black/95 border-white/20 flex flex-col overflow-hidden rounded-xl [&>button]:hidden"
+          className="max-w-[90vw] w-[90vw] max-h-[85vh] p-0 bg-black/95 border-white/20 rounded-xl [&>button]:hidden overflow-hidden flex flex-col"
+          style={{
+            left: '50%',
+            top: '50%',
+            transform: 'translate(-50%, -50%)',
+          }}
         >
-          <div className="flex-1 flex items-center justify-center overflow-auto min-h-0 w-full h-full">
-            <ImagePreview option={option} onClose={() => setOpen(false)} />
+          <div className="flex-1 flex items-center justify-center overflow-auto min-h-0 p-2">
+            <div className="w-full max-w-full">
+              <ImagePreview option={option} onClose={() => setOpen(false)} />
+            </div>
           </div>
         </DialogContent>
       </Dialog>
