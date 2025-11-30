@@ -84,7 +84,7 @@ function ImagePreview({ option }: { option: PromptOption }) {
         </div>
         
         {/* Image */}
-        <div className="relative aspect-video bg-black/20 min-h-[200px]">
+        <div className="relative aspect-video bg-black/20 min-h-[150px] sm:min-h-[200px]">
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -102,6 +102,7 @@ function ImagePreview({ option }: { option: PromptOption }) {
               className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
+              loading="lazy"
             />
           )}
         </div>
@@ -713,23 +714,23 @@ export default function PromptBuilder() {
         {/* TAB: CONSTRUCTOR */}
         {/* ═══════════════════════════════════════════════════════════════ */}
         <TabsContent value="constructor">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
             {/* Panel Izquierdo: Categorías */}
-            <div className="lg:col-span-8 flex flex-col gap-6">
+            <div className="lg:col-span-8 flex flex-col gap-4 sm:gap-6">
               
               {/* Header con progreso */}
-              <div className="glass-card p-5 rounded-xl border border-primary/20 bg-primary/5">
-                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                  <div>
-                    <h2 className="text-xl font-bold mb-1 flex items-center gap-2 text-white">
-                      <Layers className="text-primary w-5 h-5" />
-                      Módulos del Constructor
+              <div className="glass-card p-4 sm:p-5 rounded-xl border border-primary/20 bg-primary/5">
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 sm:gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h2 className="text-lg sm:text-xl font-bold mb-1 flex items-center gap-2 text-white">
+                      <Layers className="text-primary w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
+                      <span className="truncate">Módulos del Constructor</span>
                     </h2>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground">
                       Selecciona características de cada módulo para construir tu prompt perfecto.
                     </p>
                   </div>
-                  <div className="w-full md:w-auto bg-black/40 p-3 rounded-lg border border-white/5 min-w-[180px]">
+                  <div className="w-full md:w-auto bg-black/40 p-2 sm:p-3 rounded-lg border border-white/5 min-w-[160px] sm:min-w-[180px] flex-shrink-0">
                     <div className="flex justify-between text-xs mb-2">
                       <span className="text-muted-foreground">Completado</span>
                       <span className="font-mono text-primary font-bold">{filledCategories}/{totalCategories}</span>
@@ -750,29 +751,29 @@ export default function PromptBuilder() {
                     {/* Header de categoría */}
                     <button
                       onClick={() => toggleCategory(cat.id)}
-                      className="w-full flex items-center justify-between p-4 hover:bg-white/5 transition-colors"
+                      className="w-full flex items-center justify-between p-3 sm:p-4 hover:bg-white/5 transition-colors"
                     >
-                      <div className="flex items-center gap-3">
-                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center border ${
+                      <div className="flex items-center gap-2 sm:gap-3 flex-1 min-w-0">
+                        <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg flex items-center justify-center border flex-shrink-0 ${
                           isFilled 
                             ? 'bg-primary text-white border-primary' 
                             : 'bg-secondary text-muted-foreground border-white/10'
                         }`}>
-                          {isFilled ? <Check className="w-4 h-4" /> : getIcon(cat.icon, "w-4 h-4")}
+                          {isFilled ? <Check className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> : getIcon(cat.icon, "w-3.5 h-3.5 sm:w-4 sm:h-4")}
                         </div>
-                        <div className="text-left">
-                          <h3 className="font-bold flex items-center gap-2">
-                            {cat.labelEs}
+                        <div className="text-left flex-1 min-w-0">
+                          <h3 className="font-bold flex items-center gap-2 text-sm sm:text-base">
+                            <span className="truncate">{cat.labelEs}</span>
                             {isFilled && (
-                              <Badge variant="outline" className="text-xs text-primary border-primary/30 bg-primary/10">
+                              <Badge variant="outline" className="text-xs text-primary border-primary/30 bg-primary/10 flex-shrink-0">
                                 ✓
                               </Badge>
                             )}
                           </h3>
-                          <p className="text-xs text-muted-foreground">{cat.description}</p>
+                          <p className="text-xs text-muted-foreground line-clamp-1">{cat.description}</p>
                         </div>
                       </div>
-                      {isExpanded ? <ChevronDown className="w-5 h-5 text-muted-foreground" /> : <ChevronRight className="w-5 h-5 text-muted-foreground" />}
+                      {isExpanded ? <ChevronDown className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0 ml-2" /> : <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground flex-shrink-0 ml-2" />}
                     </button>
 
                     {/* Opciones de la categoría */}
@@ -785,10 +786,10 @@ export default function PromptBuilder() {
                           transition={{ duration: 0.2 }}
                           className="border-t border-white/5"
                         >
-                          <div className="p-4 space-y-4">
+                          <div className="p-3 sm:p-4 space-y-3 sm:space-y-4">
                             {Object.entries(groupedOptions).map(([groupName, options]) => (
                               <div key={groupName}>
-                                <h4 className="text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">
+                                <h4 className="text-[10px] sm:text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">
                                   {groupName}
                                 </h4>
                                 <div className="flex flex-wrap gap-2">
@@ -796,13 +797,13 @@ export default function PromptBuilder() {
                                     const isSelected = selectedOptions[cat.id] === option.value;
                                     const hasPreview = !!option.previewUrl;
                                     return (
-                                      <div key={option.id} className="flex items-center gap-1">
+                                      <div key={option.id} className="flex items-center gap-1 flex-wrap">
                                         <motion.button
                                           onClick={() => handleOptionSelect(cat.id, option.value)}
                                           whileHover={{ scale: 1.02 }}
                                           whileTap={{ scale: 0.98 }}
                                           className={`
-                                            px-3 py-2 rounded-lg border text-sm transition-all
+                                            px-2 sm:px-3 py-1.5 sm:py-2 rounded-lg border text-xs sm:text-sm transition-all
                                             ${isSelected 
                                               ? 'bg-primary/20 border-primary text-white shadow-[0_0_10px_rgba(124,58,237,0.3)]' 
                                               : 'bg-black/30 border-white/10 text-gray-300 hover:border-primary/50 hover:bg-black/50'
@@ -810,14 +811,14 @@ export default function PromptBuilder() {
                                             ${hasPreview ? 'rounded-r-none border-r-0' : ''}
                                           `}
                                         >
-                                          {option.labelEs}
+                                          <span className="whitespace-nowrap">{option.labelEs}</span>
                                         </motion.button>
                                         {hasPreview && (
                                           <Popover>
                                             <PopoverTrigger asChild>
                                               <button 
                                                 className={`
-                                                  p-2 rounded-lg rounded-l-none border text-sm transition-all
+                                                  p-1.5 sm:p-2 rounded-lg rounded-l-none border text-sm transition-all flex-shrink-0
                                                   ${isSelected 
                                                     ? 'bg-primary/20 border-primary text-primary hover:bg-primary/30' 
                                                     : 'bg-black/30 border-white/10 text-muted-foreground hover:text-white hover:bg-black/50'
@@ -829,9 +830,10 @@ export default function PromptBuilder() {
                                               </button>
                                             </PopoverTrigger>
                                             <PopoverContent 
-                                              className="w-80 p-0 bg-black/90 border-white/10"
+                                              className="w-[90vw] max-w-sm sm:w-80 p-0 bg-black/90 border-white/10"
                                               side="right"
                                               align="start"
+                                              sideOffset={5}
                                             >
                                               <ImagePreview option={option} />
                                             </PopoverContent>
@@ -854,23 +856,23 @@ export default function PromptBuilder() {
 
             {/* Panel Derecho: Preview */}
             <div className="lg:col-span-4">
-              <div className="sticky top-8 flex flex-col gap-4">
+              <div className="lg:sticky lg:top-8 flex flex-col gap-4">
                 
                 {/* Selector de Rol/Prefijo */}
-                <Card className="p-4 glass border-white/10">
+                <Card className="p-3 sm:p-4 glass border-white/10">
                   <div className="flex items-center gap-2 mb-2 text-green-400">
-                    <Target className="w-4 h-4" />
-                    <label className="text-xs font-mono uppercase tracking-wider font-bold">
+                    <Target className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <label className="text-[10px] sm:text-xs font-mono uppercase tracking-wider font-bold">
                       Tipo de Generación
                     </label>
                   </div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div className="flex flex-wrap gap-1 sm:gap-1.5">
                     {PREFIX_OPTIONS.map(opt => (
                       <button
                         key={opt.value}
                         onClick={() => setPromptPrefix(opt.value)}
                         className={`
-                          px-2.5 py-1.5 rounded-lg text-xs border transition-all
+                          px-2 sm:px-2.5 py-1 sm:py-1.5 rounded-lg text-[10px] sm:text-xs border transition-all
                           ${promptPrefix === opt.value 
                             ? 'bg-green-500/20 border-green-500 text-green-300 shadow-[0_0_8px_rgba(34,197,94,0.2)]' 
                             : 'bg-black/30 border-white/10 text-muted-foreground hover:border-green-500/50 hover:text-white'
@@ -889,10 +891,10 @@ export default function PromptBuilder() {
                 </Card>
 
                 {/* Input del sujeto principal */}
-                <Card className="p-4 glass border-white/10">
+                <Card className="p-3 sm:p-4 glass border-white/10">
                   <div className="flex items-center gap-2 mb-2 text-primary">
-                    <Lightbulb className="w-4 h-4" />
-                    <label className="text-xs font-mono uppercase tracking-wider font-bold">
+                    <Lightbulb className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <label className="text-[10px] sm:text-xs font-mono uppercase tracking-wider font-bold">
                       Sujeto Principal
                     </label>
                   </div>
@@ -905,20 +907,20 @@ export default function PromptBuilder() {
                 </Card>
 
                 {/* Input de texto en imagen (OCR Inverso - Imagen 3) */}
-                <Card className="p-4 glass border-white/10">
-                  <div className="flex items-center gap-2 mb-2 text-orange-400">
-                    <Type className="w-4 h-4" />
-                    <label className="text-xs font-mono uppercase tracking-wider font-bold">
+                <Card className="p-3 sm:p-4 glass border-white/10">
+                  <div className="flex items-center gap-2 mb-2 text-orange-400 flex-wrap">
+                    <Type className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                    <label className="text-[10px] sm:text-xs font-mono uppercase tracking-wider font-bold">
                       Texto en Imagen (OCR Inverso)
                     </label>
-                    <span className="text-[10px] px-1.5 py-0.5 rounded bg-orange-400/20 text-orange-300">Imagen 3</span>
+                    <span className="text-[9px] sm:text-[10px] px-1.5 py-0.5 rounded bg-orange-400/20 text-orange-300">Imagen 3</span>
                   </div>
                   <input
                     type="text"
                     placeholder='Ej: "SALE", "Hello World", "Codex Trader 2025"'
                     value={imageText}
                     onChange={(e) => setImageText(e.target.value)}
-                    className="w-full bg-black/30 border border-white/10 rounded-lg px-3 py-2 text-sm focus:border-orange-400/50 focus:outline-none placeholder:text-muted-foreground/40 mb-2"
+                    className="w-full bg-black/30 border border-white/10 rounded-lg px-2.5 sm:px-3 py-1.5 sm:py-2 text-xs sm:text-sm focus:border-orange-400/50 focus:outline-none placeholder:text-muted-foreground/40 mb-2"
                   />
                   {imageText && (
                     <>
@@ -1004,34 +1006,34 @@ export default function PromptBuilder() {
                 </Card>
 
                 {/* Prompt generado */}
-                <div className="glass-card p-5 rounded-xl border-primary/20 relative overflow-hidden">
+                <div className="glass-card p-4 sm:p-5 rounded-xl border-primary/20 relative overflow-hidden">
                   <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent pointer-events-none" />
                   
                   <div className="flex justify-between items-center mb-3 relative z-10">
-                    <h3 className="font-bold">Prompt Generado</h3>
+                    <h3 className="font-bold text-sm sm:text-base">Prompt Generado</h3>
                     <div className="flex gap-1">
                       <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={handleRandomize} 
-                        className="h-8 w-8 hover:bg-primary/20 hover:text-primary" 
+                        className="h-7 w-7 sm:h-8 sm:w-8 hover:bg-primary/20 hover:text-primary" 
                         title="Aleatorio"
                       >
-                        <RefreshCw className="w-4 h-4" />
+                        <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </Button>
                       <Button 
                         variant="ghost" 
                         size="icon" 
                         onClick={handleClear} 
-                        className="h-8 w-8 hover:bg-destructive/20 hover:text-destructive" 
+                        className="h-7 w-7 sm:h-8 sm:w-8 hover:bg-destructive/20 hover:text-destructive" 
                         title="Limpiar"
                       >
-                        <Trash2 className="w-4 h-4" />
+                        <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </Button>
                     </div>
                   </div>
 
-                  <div className="bg-black/50 rounded-lg p-3 border border-white/10 font-mono text-xs leading-relaxed text-gray-300 min-h-[150px] max-h-[250px] overflow-y-auto">
+                  <div className="bg-black/50 rounded-lg p-2.5 sm:p-3 border border-white/10 font-mono text-[10px] sm:text-xs leading-relaxed text-gray-300 min-h-[120px] sm:min-h-[150px] max-h-[200px] sm:max-h-[250px] overflow-y-auto break-words">
                     {generatedPrompt ? (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} key={generatedPrompt}>
                         {generatedPrompt}
@@ -1045,26 +1047,26 @@ export default function PromptBuilder() {
                   </div>
 
                   {/* Botones de acción */}
-                  <div className="mt-4 space-y-2 relative z-10">
+                  <div className="mt-3 sm:mt-4 space-y-2 relative z-10">
                     <Button 
-                      className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-11 shadow-[0_0_20px_rgba(124,58,237,0.3)]"
+                      className="w-full bg-primary hover:bg-primary/90 text-white font-bold h-10 sm:h-11 shadow-[0_0_20px_rgba(124,58,237,0.3)] text-sm sm:text-base"
                       onClick={() => handleCopy(generatedPrompt)}
                       disabled={!generatedPrompt}
                     >
-                      <Copy className="mr-2 w-4 h-4" />
+                      <Copy className="mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       Copiar Prompt
                     </Button>
                     
                     <Button 
                       variant="outline"
-                      className="w-full border-primary/30 hover:bg-primary/10 h-10"
+                      className="w-full border-primary/30 hover:bg-primary/10 h-9 sm:h-10 text-sm sm:text-base"
                       onClick={handleImprovePrompt}
                       disabled={!generatedPrompt || isLoading}
                     >
                       {isLoading ? (
-                        <Loader2 className="mr-2 w-4 h-4 animate-spin" />
+                        <Loader2 className="mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
                       ) : (
-                        <Zap className="mr-2 w-4 h-4" />
+                        <Zap className="mr-2 w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       )}
                       Mejorar con IA
                     </Button>
@@ -1099,14 +1101,14 @@ export default function PromptBuilder() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <TabsContent value="wizard">
           <div className="max-w-3xl mx-auto">
-            <div className="glass-card p-6 rounded-xl border border-primary/20 mb-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center">
-                  <Wand2 className="w-6 h-6 text-white" />
+            <div className="glass-card p-4 sm:p-6 rounded-xl border border-primary/20 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-primary to-purple-600 flex items-center justify-center flex-shrink-0">
+                  <Wand2 className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">Modo Mago</h2>
-                  <p className="text-sm text-muted-foreground">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg sm:text-xl font-bold text-white">Modo Mago</h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Describe lo que quieres en palabras simples y la IA creará un prompt profesional
                   </p>
                 </div>
@@ -1169,7 +1171,7 @@ export default function PromptBuilder() {
                     </Button>
                   </div>
                   
-                  <div className="bg-black/50 rounded-lg p-4 border border-white/10 font-mono text-sm leading-relaxed text-gray-200 mb-4">
+                  <div className="bg-black/50 rounded-lg p-3 sm:p-4 border border-white/10 font-mono text-xs sm:text-sm leading-relaxed text-gray-200 mb-3 sm:mb-4 break-words max-h-[300px] sm:max-h-[400px] overflow-y-auto">
                     {wizardOutput}
                   </div>
 
@@ -1205,14 +1207,14 @@ export default function PromptBuilder() {
         {/* ═══════════════════════════════════════════════════════════════ */}
         <TabsContent value="reverse">
           <div className="max-w-3xl mx-auto">
-            <div className="glass-card p-6 rounded-xl border border-cyan-500/20 mb-6">
-              <div className="flex items-center gap-3 mb-4">
-                <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                  <ScanSearch className="w-6 h-6 text-white" />
+            <div className="glass-card p-4 sm:p-6 rounded-xl border border-cyan-500/20 mb-4 sm:mb-6">
+              <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center flex-shrink-0">
+                  <ScanSearch className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                 </div>
-                <div>
-                  <h2 className="text-xl font-bold text-white">Ingeniería Inversa</h2>
-                  <p className="text-sm text-muted-foreground">
+                <div className="flex-1 min-w-0">
+                  <h2 className="text-lg sm:text-xl font-bold text-white">Ingeniería Inversa</h2>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Sube una imagen y la IA extraerá el prompt para crear algo similar
                   </p>
                 </div>
@@ -1268,7 +1270,7 @@ export default function PromptBuilder() {
                       <img 
                         src={uploadedImage} 
                         alt="Imagen subida" 
-                        className="max-h-72 mx-auto rounded-lg shadow-lg"
+                        className="w-full max-w-full h-auto max-h-[50vh] sm:max-h-72 mx-auto rounded-lg shadow-lg object-contain"
                       />
                       <div className="flex gap-2 justify-center">
                         <Button
@@ -1316,18 +1318,18 @@ export default function PromptBuilder() {
                 </div>
 
                 <Button 
-                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold h-12"
+                  className="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold h-11 sm:h-12 text-sm sm:text-base"
                   onClick={handleAnalyzeImage}
                   disabled={isAnalyzing || !uploadedImage}
                 >
                   {isAnalyzing ? (
                     <>
-                      <Loader2 className="mr-2 w-5 h-5 animate-spin" />
+                      <Loader2 className="mr-2 w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
                       Analizando imagen...
                     </>
                   ) : (
                     <>
-                      <ScanSearch className="mr-2 w-5 h-5" />
+                      <ScanSearch className="mr-2 w-4 h-4 sm:w-5 sm:h-5" />
                       Extraer Prompt de la Imagen
                     </>
                   )}
@@ -1342,11 +1344,11 @@ export default function PromptBuilder() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -20 }}
-                  className="glass-card p-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5"
+                  className="glass-card p-4 sm:p-6 rounded-xl border border-cyan-500/30 bg-cyan-500/5"
                 >
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="font-bold text-cyan-400 flex items-center gap-2">
-                      <Check className="w-5 h-5" />
+                  <div className="flex items-center justify-between mb-3 sm:mb-4">
+                    <h3 className="font-bold text-cyan-400 flex items-center gap-2 text-sm sm:text-base">
+                      <Check className="w-4 h-4 sm:w-5 sm:h-5" />
                       Análisis de Estilo
                     </h3>
                     <Button 

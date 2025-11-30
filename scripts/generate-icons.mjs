@@ -53,3 +53,4 @@ try {
 
 console.log('✨ ¡Iconos generados exitosamente!');
 
+
