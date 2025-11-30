@@ -9,6 +9,7 @@ import { Progress } from '@/components/ui/progress';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Popover, PopoverContent, PopoverTrigger, PopoverClose } from '@/components/ui/popover';
 import { Dialog, DialogContent, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { 
   Copy, 
@@ -99,7 +100,7 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
         </div>
         
         {/* Image */}
-        <div className={`relative bg-black/20 flex items-center justify-center ${isMobile ? 'min-h-[200px] max-h-[60vh] p-3' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
+        <div className={`relative bg-black/20 flex items-center justify-center flex-1 ${isMobile ? 'min-h-[250px] max-h-[calc(85vh-120px)] p-3' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -164,27 +165,23 @@ function ImagePreviewButton({ option, isSelected }: { option: PromptOption; isSe
   );
 
   if (isMobile) {
-    // En móvil: usar Dialog con tamaño razonable y centrado
+    // En móvil: usar Sheet desde abajo (más natural en móvil)
     return (
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogTrigger asChild>
+      <Sheet open={open} onOpenChange={setOpen}>
+        <SheetTrigger asChild>
           {triggerButton}
-        </DialogTrigger>
-        <DialogContent 
-          className="max-w-[90vw] w-[90vw] max-h-[85vh] p-0 bg-black/95 border-white/20 rounded-xl [&>button]:hidden overflow-hidden flex flex-col"
-          style={{
-            left: '50%',
-            top: '50%',
-            transform: 'translate(-50%, -50%)',
-          }}
+        </SheetTrigger>
+        <SheetContent 
+          side="bottom"
+          className="h-[85vh] max-h-[85vh] p-0 bg-black/95 border-white/20 rounded-t-2xl [&>button]:hidden overflow-hidden flex flex-col"
         >
-          <div className="flex-1 flex items-center justify-center overflow-auto min-h-0 p-2">
-            <div className="w-full max-w-full">
+          <div className="flex-1 flex items-center justify-center overflow-auto min-h-0 p-3">
+            <div className="w-full max-w-full h-full flex flex-col">
               <ImagePreview option={option} onClose={() => setOpen(false)} />
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
+        </SheetContent>
+      </Sheet>
     );
   }
 
