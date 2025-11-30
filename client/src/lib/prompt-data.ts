@@ -1,4 +1,4 @@
-export type Category = 'style' | 'camera' | 'lighting' | 'material' | 'vibe' | 'anime' | 'format' | 'physics' | 'adherence' | 'editing';
+export type Category = 'style' | 'camera' | 'lighting' | 'material' | 'vibe' | 'anime' | 'format' | 'physics' | 'adherence';
 
 export interface PromptOption {
   id: string;
@@ -216,12 +216,6 @@ export const PROMPT_OPTIONS: PromptOption[] = [
   { id: 'position_foreground', label: 'Position: Foreground', labelEs: 'Posición: Primer Plano', value: 'in the foreground, sharp focus', description: 'Elemento en primer plano', descriptionEs: 'Elemento en primer plano', category: 'adherence', group: 'Position', groupEs: 'Posición' },
   { id: 'negative_prompt', label: 'Negative Space', labelEs: 'Espacio Negativo', value: 'with ample negative space', description: 'Área vacía para diseño', descriptionEs: 'Área vacía para diseño', category: 'adherence', group: 'Composition', groupEs: 'Composición' },
 
-  // ═══════════════════════════════════════════════════════════════
-  // EDICIÓN (Inpainting/Outpainting) (Imagen 3)
-  // ═══════════════════════════════════════════════════════════════
-  { id: 'inpainting', label: 'Inpainting Ready', labelEs: 'Listo para Inpainting', value: 'image suitable for local editing and inpainting', description: 'Preparado para edición local', descriptionEs: 'Preparado para edición local', category: 'editing', group: 'Editing', groupEs: 'Edición' },
-  { id: 'outpainting', label: 'Outpainting Ready', labelEs: 'Listo para Outpainting', value: 'image with extendable borders for outpainting', description: 'Bordes extensibles para ampliar', descriptionEs: 'Bordes extensibles para ampliar', category: 'editing', group: 'Editing', groupEs: 'Edición' },
-  { id: 'smart_removal', label: 'Smart Removal Zone', labelEs: 'Zona de Borrado Inteligente', value: 'with areas suitable for intelligent object removal', description: 'Áreas preparadas para borrado', descriptionEs: 'Áreas preparadas para borrado', category: 'editing', group: 'Editing', groupEs: 'Edición' },
 ];
 
 export const CATEGORIES: { id: Category; label: string; labelEs: string; icon: string; description: string }[] = [
@@ -234,7 +228,6 @@ export const CATEGORIES: { id: Category; label: string; labelEs: string; icon: s
   { id: 'format', label: 'Format', labelEs: 'Formato', icon: 'Maximize', description: 'Proporción y tamaño de imagen' },
   { id: 'physics', label: 'Physics & Realism', labelEs: 'Física y Realismo', icon: 'Zap', description: 'Fotorrealismo avanzado y física (PBR, reflejos, luz volumétrica)' },
   { id: 'adherence', label: 'Prompt Adherence', labelEs: 'Adherencia al Prompt', icon: 'Target', description: 'Control preciso de composición y posicionamiento' },
-  { id: 'editing', label: 'Editing Ready', labelEs: 'Listo para Edición', icon: 'Edit', description: 'Preparado para inpainting, outpainting y borrado inteligente' },
 ];
 
 // ═══════════════════════════════════════════════════════════════

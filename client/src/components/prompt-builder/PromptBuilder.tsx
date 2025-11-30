@@ -221,8 +221,7 @@ export default function PromptBuilder() {
     anime: null,
     format: null,
     physics: null,
-    adherence: null,
-    editing: null
+    adherence: null
   });
   const [expandedCategories, setExpandedCategories] = useState<Record<string, boolean>>({});
   const [wizardInput, setWizardInput] = useState('');
@@ -520,8 +519,7 @@ export default function PromptBuilder() {
       selectedOptions.anime,
       selectedOptions.format,
       selectedOptions.physics,
-      selectedOptions.adherence,
-      selectedOptions.editing
+      selectedOptions.adherence
     ].filter(Boolean);
     
     // Agregar texto si existe (OCR Inverso - Imagen 3)
@@ -579,8 +577,7 @@ export default function PromptBuilder() {
       anime: null,
       format: null,
       physics: null,
-      adherence: null,
-      editing: null
+      adherence: null
     });
     setImageText('');
     setTextPosition('');
@@ -703,7 +700,7 @@ export default function PromptBuilder() {
       setSelectedOptions({
         style: null, camera: null, lighting: null,
         material: null, vibe: null, anime: null, format: null,
-        physics: null, adherence: null, editing: null
+        physics: null, adherence: null
       });
       toast({
         title: "¡Prompt mejorado!",
