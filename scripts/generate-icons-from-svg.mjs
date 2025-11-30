@@ -104,3 +104,5 @@ async function generateIcons() {
 // Ejecutar la función
 generateIcons();
 
+
+

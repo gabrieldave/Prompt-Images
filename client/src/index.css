@@ -170,3 +170,23 @@
 .text-gradient {
   @apply bg-clip-text text-transparent bg-linear-to-r from-primary to-accent;
 }
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  /* Ensure images are centered and not cut off */
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  /* Prevent horizontal overflow */
+  body {
+    overflow-x: hidden;
+  }
+  
+  /* Center popovers on mobile */
+  [data-radix-popper-content-wrapper] {
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+}

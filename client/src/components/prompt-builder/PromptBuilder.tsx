@@ -66,12 +66,12 @@ function ImagePreview({ option }: { option: PromptOption }) {
       exit={{ opacity: 0, scale: 0.95 }}
       className="relative"
     >
-      <div className="relative rounded-lg overflow-hidden bg-black/50 border border-white/10">
+      <div className="relative rounded-lg overflow-hidden bg-black/50 border border-white/10 w-full">
         {/* Header */}
         <div className="flex items-center justify-between p-3 border-b border-white/10 bg-black/30">
-          <div>
-            <h4 className="font-bold text-white text-sm">{option.labelEs}</h4>
-            <p className="text-xs text-muted-foreground">{option.descriptionEs || option.value}</p>
+          <div className="flex-1 min-w-0 pr-2">
+            <h4 className="font-bold text-white text-sm truncate">{option.labelEs}</h4>
+            <p className="text-xs text-muted-foreground line-clamp-2">{option.descriptionEs || option.value}</p>
           </div>
           <PopoverClose asChild>
             <button 
@@ -84,7 +84,7 @@ function ImagePreview({ option }: { option: PromptOption }) {
         </div>
         
         {/* Image */}
-        <div className="relative aspect-video bg-black/20 min-h-[150px] sm:min-h-[200px]">
+        <div className="relative aspect-video bg-black/20 min-h-[150px] sm:min-h-[200px] flex items-center justify-center">
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -99,7 +99,7 @@ function ImagePreview({ option }: { option: PromptOption }) {
             <img 
               src={option.previewUrl} 
               alt={option.labelEs}
-              className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
+              className={`max-w-full max-h-full w-auto h-auto object-contain transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
               onLoad={() => setImageLoaded(true)}
               onError={() => setImageError(true)}
               loading="lazy"
@@ -677,9 +677,9 @@ export default function PromptBuilder() {
   };
 
   return (
-    <div className="pb-20">
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="grid w-full grid-cols-4 mb-8 bg-black/40 border border-white/10 p-1 h-auto">
+    <div className="pb-20 w-full max-w-full overflow-x-hidden">
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full max-w-full">
+        <TabsList className="grid w-full grid-cols-4 mb-8 bg-black/40 border border-white/10 p-1 h-auto overflow-x-auto">
           <TabsTrigger 
             value="constructor" 
             className="data-[state=active]:bg-primary data-[state=active]:text-white py-3 gap-2"
@@ -714,9 +714,9 @@ export default function PromptBuilder() {
         {/* TAB: CONSTRUCTOR */}
         {/* ═══════════════════════════════════════════════════════════════ */}
         <TabsContent value="constructor">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 lg:gap-8 w-full max-w-full">
             {/* Panel Izquierdo: Categorías */}
-            <div className="lg:col-span-8 flex flex-col gap-4 sm:gap-6">
+            <div className="lg:col-span-8 flex flex-col gap-4 sm:gap-6 w-full max-w-full">
               
               {/* Header con progreso */}
               <div className="glass-card p-4 sm:p-5 rounded-xl border border-primary/20 bg-primary/5">
@@ -792,12 +792,12 @@ export default function PromptBuilder() {
                                 <h4 className="text-[10px] sm:text-xs font-mono uppercase tracking-wider text-muted-foreground mb-2">
                                   {groupName}
                                 </h4>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                                   {options.map(option => {
                                     const isSelected = selectedOptions[cat.id] === option.value;
                                     const hasPreview = !!option.previewUrl;
                                     return (
-                                      <div key={option.id} className="flex items-center gap-1 flex-wrap">
+                                      <div key={option.id} className="flex items-center gap-1 flex-wrap justify-center sm:justify-start">
                                         <motion.button
                                           onClick={() => handleOptionSelect(cat.id, option.value)}
                                           whileHover={{ scale: 1.02 }}
@@ -830,10 +830,11 @@ export default function PromptBuilder() {
                                               </button>
                                             </PopoverTrigger>
                                             <PopoverContent 
-                                              className="w-[90vw] max-w-sm sm:w-80 p-0 bg-black/90 border-white/10"
-                                              side="right"
-                                              align="start"
-                                              sideOffset={5}
+                                              className="w-[calc(100vw-2rem)] max-w-sm sm:w-80 p-0 bg-black/90 border-white/10 mx-auto left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0"
+                                              side="bottom"
+                                              align="center"
+                                              sideOffset={8}
+                                              alignOffset={0}
                                             >
                                               <ImagePreview option={option} />
                                             </PopoverContent>
@@ -855,8 +856,8 @@ export default function PromptBuilder() {
             </div>
 
             {/* Panel Derecho: Preview */}
-            <div className="lg:col-span-4">
-              <div className="lg:sticky lg:top-8 flex flex-col gap-4">
+            <div className="lg:col-span-4 w-full max-w-full">
+              <div className="lg:sticky lg:top-8 flex flex-col gap-4 w-full">
                 
                 {/* Selector de Rol/Prefijo */}
                 <Card className="p-3 sm:p-4 glass border-white/10">
@@ -1266,11 +1267,12 @@ export default function PromptBuilder() {
                   tabIndex={0}
                 >
                   {uploadedImage ? (
-                    <div className="space-y-4">
+                    <div className="space-y-4 flex flex-col items-center">
                       <img 
                         src={uploadedImage} 
                         alt="Imagen subida" 
                         className="w-full max-w-full h-auto max-h-[50vh] sm:max-h-72 mx-auto rounded-lg shadow-lg object-contain"
+                        style={{ maxWidth: '100%', height: 'auto' }}
                       />
                       <div className="flex gap-2 justify-center">
                         <Button

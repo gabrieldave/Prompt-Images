@@ -19,7 +19,7 @@ export default function Home() {
       {/* Gradient Overlay */}
       <div className="fixed inset-0 z-0 bg-gradient-to-b from-background via-background/95 to-background pointer-events-none" />
       
-      <div className="relative z-10 container mx-auto px-4 py-6 min-h-screen flex flex-col">
+      <div className="relative z-10 container mx-auto px-4 sm:px-6 py-6 min-h-screen flex flex-col max-w-full">
         {/* Header */}
         <header className="flex justify-between items-center mb-8 border-b border-white/5 pb-4">
           <div className="flex items-center gap-3">
