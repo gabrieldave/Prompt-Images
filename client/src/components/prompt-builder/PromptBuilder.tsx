@@ -98,7 +98,7 @@ function ImagePreview({ option, onClose }: { option: PromptOption; onClose?: () 
         </div>
         
         {/* Image */}
-        <div className={`relative bg-black/20 flex items-center justify-center ${isMobile ? 'min-h-[180px] max-h-[50vh] p-2' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
+        <div className={`relative bg-black/20 flex items-center justify-center ${isMobile ? 'min-h-[150px] max-h-[45vh] p-2' : 'min-h-[200px] sm:min-h-[250px] max-h-[60vh] sm:max-h-[400px] p-2'}`}>
           {!imageLoaded && !imageError && (
             <div className="absolute inset-0 flex items-center justify-center">
               <Loader2 className="w-8 h-8 animate-spin text-primary/50" />
@@ -166,13 +166,13 @@ function ImagePreviewButton({ option, isSelected }: { option: PromptOption; isSe
         className={`
           p-0 bg-black/95 border-white/20 overflow-hidden
           ${isMobile 
-            ? 'w-[85vw] max-w-[85vw] max-h-[70vh] rounded-xl' 
+            ? 'w-[80vw] max-w-[80vw] max-h-[60vh] rounded-xl' 
             : 'w-96 max-w-md max-h-[85vh] rounded-lg'
           }
         `}
         side={isMobile ? "top" : "bottom"}
         align="center"
-        sideOffset={isMobile ? 12 : 8}
+        sideOffset={isMobile ? 16 : 8}
         alignOffset={0}
       >
         <ImagePreview option={option} />
